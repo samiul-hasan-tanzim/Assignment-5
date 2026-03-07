@@ -1,4 +1,8 @@
-const cardSection = document.getElementById('all-card-section')
+const allCardSection = document.getElementById('all-card-section')
+const openCardSection = document.getElementById('open-card-section')
+const closedCardSection = document.getElementById('closed-card-section')
+const state = document.getElementById('state')
+
 
 
 const allIssues = async () => {
@@ -6,6 +10,9 @@ const allIssues = async () => {
     const res = await fetch(url)
     const data = await res.json()
     displayAllIssues(data.data)
+    displayOpenIssues(data.data)
+    displayClosedIssues(data.data)
+    state.innerText = allCardSection.children.length
 }
 allIssues()
 
@@ -52,7 +59,6 @@ const cardTopBorder = (parm) => {
     }
 }
 
-
 const dynamicBadges = (arr) => {
     const badges = arr.map((el) => {
         const element = labelstate(el)
@@ -60,35 +66,59 @@ const dynamicBadges = (arr) => {
     })
     return badges.join(' ')
 }
+
+
+const createIssueCard = (issue) => {
+    const createdDate = new Date(issue.createdAt);
+    const formattedDate = `${createdDate.getMonth() + 1}/${createdDate.getDate()}/${createdDate.getFullYear()}`;
+
+    const div = document.createElement('div')
+    div.innerHTML = `
+        <div class="card card-body border-t-4 ${cardTopBorder(issue.status)} shadow-md space-y-5">
+            <div class="flex justify-between">
+                <img src="assets/${issue.status === 'open' ? 'Open' : 'Closed'}-Status.png" alt="">
+                <div class="badge ${priorityColor(issue.priority)}">${issue.priority}</div>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold line-clamp-1">${issue.title}</h4>
+                <p class="text-sm text-base-content/50 line-clamp-2">${issue.description}</p>
+            </div>
+            <div class="flex gap-3">
+                ${dynamicBadges(issue.labels)}
+            </div>
+            <hr class="-mx-6 opacity-20">
+            <div class="text-base-content/50 text-sm">
+                <p>${issue.id} by ${issue.author}</p>
+                <p>${formattedDate}</p>
+            </div>
+        </div>
+    `
+    return div
+}
+
+
 const displayAllIssues = (issues) => {
     issues.forEach(issue => {
-        console.log(issue)
-        const createdDate = new Date(issue.createdAt);
-        const formattedDate = `${createdDate.getMonth() + 1}/${createdDate.getDate()}/${createdDate.getFullYear()}`;
-        const div = document.createElement('div')
-        div.innerHTML = `
-        <div class="card card-body border-t-4 ${cardTopBorder(issue.status)} shadow-md space-y-5">
-                <div class="flex justify-between">
-                    <img src="assets/${issue.status === 'open' ? 'Open' : 'Closed'}-Status.png" alt="">
-                    <div class="badge ${priorityColor(issue.priority)}">${issue.priority}</div>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold line-clamp-1">${issue.title}</h4>
-                    <p class="text-sm text-base-content/50 line-clamp-2">${issue.description}</p>
-                </div>
-                <div class="flex gap-3">
-                    ${dynamicBadges(issue.labels)}
-                </div>
-                <hr class="-mx-6 opacity-20">
-                <div class="text-base-content/50 text-sm">
-                    <p>${issue.id} by ${issue.author}</p>
-                    <p>${formattedDate}</p>
-                </div>
-            </div>
-        `
-        cardSection.appendChild(div)
+        allCardSection.appendChild(createIssueCard(issue))
     });
 }
+
+const displayOpenIssues = (issues) => {
+    const openIssues = issues.filter(issue => issue.status === 'open')
+    openIssues.forEach(issue => {
+        openCardSection.appendChild(createIssueCard(issue))
+    });
+}
+
+const displayClosedIssues = (issues) => {
+    const closedIssues = issues.filter(issue => issue.status === 'closed')
+    closedIssues.forEach(issue => {
+        closedCardSection.appendChild(createIssueCard(issue))
+    });
+}
+
+
+
 
 
 const tabStatus = ['btn-soft']
@@ -103,4 +133,21 @@ const switchTab = (currentTab) => {
             clickedTab.classList.add(...tabStatus)
         )
     }
+
+    const toggolingSection = [allCardSection, openCardSection, closedCardSection]
+    toggolingSection.forEach(section => {
+        section.classList.add('hidden')
+        if (currentTab === 'allBtn') {
+            allCardSection.classList.remove('hidden')
+            state.innerText = allCardSection.children.length
+        }
+        if (currentTab === 'openBtn') {
+            openCardSection.classList.remove('hidden')
+            state.innerText = openCardSection.children.length
+        }
+        if (currentTab === 'closedBtn') {
+            closedCardSection.classList.remove('hidden')
+            state.innerText = closedCardSection.children.length
+        }
+    });
 }
