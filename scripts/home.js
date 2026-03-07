@@ -8,7 +8,7 @@ let allIssuesData = []
 const allIssues = async () => {
     const res = await fetch(url)
     const data = await res.json()
-    allIssuesData = data.data  // সব issues save করছি
+    allIssuesData = data.data
     displayAllIssues(allIssuesData)
     displayOpenIssues(allIssuesData)
     displayClosedIssues(allIssuesData)
@@ -74,7 +74,7 @@ const createIssueCard = (issue) => {
 
     const div = document.createElement('div')
     div.innerHTML = `
-        <div class="card card-body border-t-4 ${cardTopBorder(issue.status)} shadow-md space-y-5">
+        <div onclick = 'loadDetail(${issue.id})' class="card card-body border-t-4 ${cardTopBorder(issue.status)} shadow-md space-y-5">
             <div class="flex justify-between">
                 <img src="assets/${issue.status === 'open' ? 'Open' : 'Closed'}-Status.png" alt="">
                 <div class="badge ${priorityColor(issue.priority)}">${issue.priority}</div>
@@ -175,3 +175,61 @@ document.getElementById('btn-search').addEventListener('click', async () => {
     displayAllIssues(filterWords)
     state.innerText = allCardSection.children.length
 })
+
+
+
+
+const loadDetail = async (id) => {
+    const url = `https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`
+    console.log(url)
+    const res = await fetch(url)
+    const detils = await res.json()
+    displayDetils(detils.data)
+}
+
+
+
+const modalState = (parm) => {
+    if (parm === 'open') {
+        return 'badge-success'
+    }
+    else {
+        return 'badge-info'
+    }
+}
+
+const displayDetils = (detils) => {
+    console.log(detils)
+    const createdDate = new Date(detils.updatedAt);
+    const formattedDate = `${createdDate.getMonth() + 1}/${createdDate.getDate()}/${createdDate.getFullYear()}`;
+    const updatedAuthor = detils.author.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    const detilesContainer = document.getElementById('detiles-container')
+    detilesContainer.innerHTML = `
+    <div class="space-y-5">
+        <h3 class="text-2xl">${detils.title}</h3>
+        <div class="flex gap-5 items-center">
+            <div class="badge ${modalState(detils.status)}">${detils.status === 'open' ? 'Opened' : 'Closed'}</div>
+            <ul class="flex gap-5 text-[12px]">
+                <li class="before:content-['•'] opacity-50"> ${updatedAuthor}</li>
+                <li class="before:content-['•'] opacity-50"> ${formattedDate}</li>
+            </ul>
+        </div>
+        <div class="space-x-2">
+            ${dynamicBadges(detils.labels)}
+        </div>
+        <p>${detils.description}</p>
+        <div class="flex justify-between items-center bg-base-300 p-2 rounded-sm">
+            <div>
+                <p>Assignee:</p>
+                <span>${updatedAuthor}</span>
+            </div>
+            <div>
+                <p>Assignee:</p>
+                <div class="badge ${priorityColor(detils.priority)}">${detils.priority}</div>
+            </div>
+            <div></div>
+        </div>
+    </div>
+    `
+    document.getElementById('modal_display').showModal()
+}

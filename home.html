@@ -76,27 +76,7 @@
         </section>
 
         <section id="all-card-section" class="bg-white shadow rounded-sm mt-1 p-5 grid grid-cols-4 gap-5">
-            <!-- <div class="card card-body border-t-4 border-green-500 shadow-md space-y-5">
-                <div class="flex justify-between">
-                    <img src="assets/Open-Status.png" alt="">
-                    <div class="badge badge-error bg-error/30">High</div>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold">Fix navigation menu on mobile devices</h4>
-                    <p class="text-sm text-base-content/50">The navigation menu doesn't collapse properly on mobile
-                        devices...</p>
-                </div>
-                <div class="flex gap-3">
-                    <div class="badge badge-error bg-error/30"><i class="fa-solid fa-bug"></i> Bug</div>
-                    <div class="badge badge-warning bg-warning/30"><i class="fa-regular fa-life-ring"></i> help wanted
-                    </div>
-                </div>
-                <hr class="-mx-6 opacity-20">
-                <div class="text-base-content/50 text-sm">
-                    <p>#1 by john_doe</p>
-                    <p>1/15/2024</p>
-                </div>
-            </div> -->
+            <!-- All cards Dynamically loaded hear -->
         </section>
 
         <section id="open-card-section" class="bg-white shadow rounded-sm mt-1 p-5 grid grid-cols-4 gap-5 hidden">
@@ -104,6 +84,25 @@
 
         <section id="closed-card-section" class="bg-white shadow rounded-sm mt-1 p-5 grid grid-cols-4 gap-5 hidden">
         </section>
+
+
+
+        <dialog id="modal_display" class="modal">
+            <div class="modal-box">
+                <div id="detiles-container">
+                    <!-- Detiles Dynamically loaded hear -->
+                </div>
+                <div class="modal-action">
+                    <form method="dialog">
+                        <button class="btn btn-primary border-0">Close</button>
+                    </form>
+                </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
+
+        </dialog>
     </main>
 
     <script src="scripts/home.js"></script>
