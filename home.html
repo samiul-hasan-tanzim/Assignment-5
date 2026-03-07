@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="styles/style.css">
 </head>
 
-<body class="bg-[#F8FAFC] h-screen">
+<body class="bg-[#F8FAFC] h-full">
     <header class="flex justify-between items-center py-5 px-20 bg-white shadow-sm">
         <div class="flex items-center gap-2">
             <img width="30px" src="assets/github-logo.png" alt="">
@@ -46,9 +46,10 @@
 
     <main class="w-10/12 mx-auto ">
         <section class="flex gap-3 bg-white my-10 p-5 shadow rounded-md">
-            <button class="px-10 btn btn-primary">All</button>
-            <button class="px-10 btn btn-primary btn-soft">Open</button>
-            <button class="px-10 btn btn-primary btn-soft">Closed</button>
+            <button onclick="switchTab('allBtn')" id="tab-allBtn" class="px-10 btn btn-primary">All</button>
+            <button onclick="switchTab('openBtn')" id="tab-openBtn" class="px-10 btn btn-primary btn-soft">Open</button>
+            <button onclick="switchTab('closedBtn')" id="tab-closedBtn"
+                class="px-10 btn btn-primary btn-soft">Closed</button>
         </section>
 
         <section class="flex justify-between items-center bg-white mt-10 p-5 shadow rounded-md">
@@ -73,8 +74,8 @@
             </div>
         </section>
 
-        <section class="bg-white shadow rounded-sm mt-1 p-5 grid grid-cols-4">
-            <div class="card card-body border-t-4 border-green-500 shadow-md space-y-5">
+        <section id="all-card-section" class="bg-white shadow rounded-sm mt-1 p-5 grid grid-cols-4 gap-5">
+            <!-- <div class="card card-body border-t-4 border-green-500 shadow-md space-y-5">
                 <div class="flex justify-between">
                     <img src="assets/Open-Status.png" alt="">
                     <div class="badge badge-error bg-error/30">High</div>
@@ -94,9 +95,19 @@
                     <p>#1 by john_doe</p>
                     <p>1/15/2024</p>
                 </div>
-            </div>
+            </div> -->
+        </section>
+
+        <section id="open-card-section" class="bg-white shadow rounded-sm mt-1 p-5 grid grid-cols-4 gap-5 hidden">
+
+        </section>
+
+        <section id="closed-card-section" class="bg-white shadow rounded-sm mt-1 p-5 grid grid-cols-4 gap-5 hidden">
+
         </section>
     </main>
+
+    <script src="scripts/home.js"></script>
 </body>
 
 </html>
