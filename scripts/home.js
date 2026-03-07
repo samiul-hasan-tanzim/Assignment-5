@@ -2,16 +2,16 @@ const allCardSection = document.getElementById('all-card-section')
 const openCardSection = document.getElementById('open-card-section')
 const closedCardSection = document.getElementById('closed-card-section')
 const state = document.getElementById('state')
-
-
+const url = 'https://phi-lab-server.vercel.app/api/v1/lab/issues'
+let allIssuesData = []
 
 const allIssues = async () => {
-    const url = 'https://phi-lab-server.vercel.app/api/v1/lab/issues'
     const res = await fetch(url)
     const data = await res.json()
-    displayAllIssues(data.data)
-    displayOpenIssues(data.data)
-    displayClosedIssues(data.data)
+    allIssuesData = data.data  // সব issues save করছি
+    displayAllIssues(allIssuesData)
+    displayOpenIssues(allIssuesData)
+    displayClosedIssues(allIssuesData)
     state.innerText = allCardSection.children.length
 }
 allIssues()
@@ -118,9 +118,6 @@ const displayClosedIssues = (issues) => {
 }
 
 
-
-
-
 const tabStatus = ['btn-soft']
 const switchTab = (currentTab) => {
     const tabs = ['allBtn', 'openBtn', 'closedBtn']
@@ -134,20 +131,47 @@ const switchTab = (currentTab) => {
         )
     }
 
+
+
     const toggolingSection = [allCardSection, openCardSection, closedCardSection]
     toggolingSection.forEach(section => {
         section.classList.add('hidden')
+        allCardSection.innerHTML = ''
+        openCardSection.innerHTML = ''
+        closedCardSection.innerHTML = ''
         if (currentTab === 'allBtn') {
+            displayAllIssues(allIssuesData)
             allCardSection.classList.remove('hidden')
             state.innerText = allCardSection.children.length
         }
         if (currentTab === 'openBtn') {
+            displayOpenIssues(allIssuesData)
             openCardSection.classList.remove('hidden')
             state.innerText = openCardSection.children.length
         }
         if (currentTab === 'closedBtn') {
+            displayClosedIssues(allIssuesData)
             closedCardSection.classList.remove('hidden')
             state.innerText = closedCardSection.children.length
         }
     });
 }
+
+
+document.getElementById('btn-search').addEventListener('click', async () => {
+    switchTab('allBtn')
+    document.getElementById('tab-allBtn').classList.add('btn-soft')
+    allCardSection.innerHTML = ''
+    const input = document.getElementById('input-search')
+    const searchValue = input.value.trim().toLowerCase()
+
+    const res = await fetch(url)
+    const data = await res.json()
+    const allWords = data.data
+
+    const filterWords = allWords.filter(word =>
+        word.title.toLowerCase().includes(searchValue)
+    )
+    displayAllIssues(filterWords)
+    state.innerText = allCardSection.children.length
+})
