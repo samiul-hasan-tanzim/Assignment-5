@@ -5,7 +5,20 @@ const state = document.getElementById('state')
 const url = 'https://phi-lab-server.vercel.app/api/v1/lab/issues'
 let allIssuesData = []
 
+const manageSpinner = (status) => {
+    if (status) {
+        document.getElementById('spinner').classList.remove('hidden')
+        allCardSection.classList.add('hidden')
+    }
+    else {
+        document.getElementById('spinner').classList.add('hidden')
+        allCardSection.classList.remove('hidden')
+    }
+}
+
+
 const allIssues = async () => {
+    manageSpinner(true)
     const res = await fetch(url)
     const data = await res.json()
     allIssuesData = data.data
@@ -74,7 +87,7 @@ const createIssueCard = (issue) => {
 
     const div = document.createElement('div')
     div.innerHTML = `
-        <div onclick = 'loadDetail(${issue.id})' class="card card-body border-t-4 ${cardTopBorder(issue.status)} shadow-md space-y-5">
+        <div onclick = 'loadDetail(${issue.id})' class="card card-body border-t-4 ${cardTopBorder(issue.status)} shadow-md space-y-5 cursor-pointer">
             <div class="flex justify-between">
                 <img src="assets/${issue.status === 'open' ? 'Open' : 'Closed'}-Status.png" alt="">
                 <div class="badge ${priorityColor(issue.priority)}">${issue.priority}</div>
@@ -101,6 +114,7 @@ const displayAllIssues = (issues) => {
     issues.forEach(issue => {
         allCardSection.appendChild(createIssueCard(issue))
     });
+    manageSpinner(false)
 }
 
 const displayOpenIssues = (issues) => {
@@ -120,6 +134,8 @@ const displayClosedIssues = (issues) => {
 
 const tabStatus = ['btn-soft']
 const switchTab = (currentTab) => {
+    manageSpinner(true)
+
     const tabs = ['allBtn', 'openBtn', 'closedBtn']
     for (const tab of tabs) {
         const clickedTab = document.getElementById('tab-' + tab)
@@ -132,29 +148,27 @@ const switchTab = (currentTab) => {
     }
 
 
+    allCardSection.classList.add('hidden')
+    openCardSection.classList.add('hidden')
+    closedCardSection.classList.add('hidden')
 
-    const toggolingSection = [allCardSection, openCardSection, closedCardSection]
-    toggolingSection.forEach(section => {
-        section.classList.add('hidden')
-        allCardSection.innerHTML = ''
-        openCardSection.innerHTML = ''
-        closedCardSection.innerHTML = ''
+
+    setTimeout(() => {
         if (currentTab === 'allBtn') {
-            displayAllIssues(allIssuesData)
+            // location.reload()
             allCardSection.classList.remove('hidden')
             state.innerText = allCardSection.children.length
         }
         if (currentTab === 'openBtn') {
-            displayOpenIssues(allIssuesData)
             openCardSection.classList.remove('hidden')
             state.innerText = openCardSection.children.length
         }
         if (currentTab === 'closedBtn') {
-            displayClosedIssues(allIssuesData)
             closedCardSection.classList.remove('hidden')
             state.innerText = closedCardSection.children.length
         }
-    });
+        manageSpinner(false)
+    }, 300)
 }
 
 
@@ -233,3 +247,11 @@ const displayDetils = (detils) => {
     `
     document.getElementById('modal_display').showModal()
 }
+
+
+
+document.addEventListener('click', () => {
+    document.getElementById('tab-allBtn').addEventListener('click', () => {
+        location.reload();
+    });
+});
