@@ -25,7 +25,7 @@
 </head>
 
 <body class="bg-[#F8FAFC] h-full">
-    <header class="flex justify-between items-center py-5 px-20 bg-white shadow-sm">
+    <header class="nav-header flex justify-between items-center py-5 px-20 bg-white shadow-sm">
         <div class="flex items-center gap-2">
             <img width="30px" src="assets/github-logo.png" alt="">
             <h2 class="text-2xl font-semibold">GitHub Issues Tracker</h2>
@@ -46,24 +46,24 @@
     </header>
 
     <main class="w-10/12 mx-auto ">
-        <section class="flex gap-3 bg-white my-10 p-5 shadow rounded-md">
+        <section class="tab-btns flex gap-3 bg-white my-10 p-5 shadow rounded-md">
             <button onclick="switchTab('allBtn')" id="tab-allBtn" class="px-10 btn btn-primary">All</button>
             <button onclick="switchTab('openBtn')" id="tab-openBtn" class="px-10 btn btn-primary btn-soft">Open</button>
             <button onclick="switchTab('closedBtn')" id="tab-closedBtn"
                 class="px-10 btn btn-primary btn-soft">Closed</button>
         </section>
 
-        <section class="flex justify-between items-center bg-white mt-10 p-5 shadow rounded-md">
+        <section class="state-info-card flex justify-between items-center bg-white mt-10 p-5 shadow rounded-md">
             <div class="flex items-center gap-3">
                 <div>
                     <img src="assets/Aperture.png" alt="">
                 </div>
-                <div>
+                <div class="state-title-description">
                     <h3 class="text-xl font-semibold"><span id="state">0</span> Issues</h3>
                     <p class="text-base-content/50">Track and manage your project issues</p>
                 </div>
             </div>
-            <div class="flex gap-3">
+            <div class="flex gap-3 state-indicator">
                 <div class="flex items-center gap-1">
                     <div class="w-2 h-2 rounded-full bg-green-500"></div>
                     <p class="font-medium">Open</p>

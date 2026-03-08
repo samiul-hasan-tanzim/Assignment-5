@@ -5,18 +5,22 @@ const state = document.getElementById('state')
 const url = 'https://phi-lab-server.vercel.app/api/v1/lab/issues'
 let allIssuesData = []
 
+
+// Show or hide the spinner while loading data
 const manageSpinner = (status) => {
+    const spinner = document.getElementById('spinner')
     if (status) {
-        document.getElementById('spinner').classList.remove('hidden')
+        spinner.classList.remove('hidden')
         allCardSection.classList.add('hidden')
+        openCardSection.classList.add('hidden')
+        closedCardSection.classList.add('hidden')
     }
     else {
-        document.getElementById('spinner').classList.add('hidden')
-        allCardSection.classList.remove('hidden')
+        spinner.classList.add('hidden')
     }
 }
 
-
+// Fetch all issues from the server
 const allIssues = async () => {
     manageSpinner(true)
     const res = await fetch(url)
@@ -29,7 +33,7 @@ const allIssues = async () => {
 }
 allIssues()
 
-
+// Dynamic CSS styles for priority badge
 const priorityColor = (priority) => {
     if (priority === 'high') {
         return 'badge-error bg-error/30 border-0'
@@ -42,6 +46,7 @@ const priorityColor = (priority) => {
     }
 }
 
+// Dynamic CSS styles for Label badge
 const labelstate = (label) => {
     if (label === 'bug') {
         return {
@@ -63,6 +68,7 @@ const labelstate = (label) => {
     }
 }
 
+// Dynamic border CSS styles for Card
 const cardTopBorder = (parm) => {
     if (parm === 'open') {
         return 'border-green-500'
@@ -72,6 +78,7 @@ const cardTopBorder = (parm) => {
     }
 }
 
+// Dynamic CSS styles for badge
 const dynamicBadges = (arr) => {
     const badges = arr.map((el) => {
         const element = labelstate(el)
@@ -80,7 +87,7 @@ const dynamicBadges = (arr) => {
     return badges.join(' ')
 }
 
-
+// Create a single issue card
 const createIssueCard = (issue) => {
     const createdDate = new Date(issue.createdAt);
     const formattedDate = `${createdDate.getMonth() + 1}/${createdDate.getDate()}/${createdDate.getFullYear()}`;
@@ -109,31 +116,38 @@ const createIssueCard = (issue) => {
     return div
 }
 
-
+// Display all issues in the "All" tab
 const displayAllIssues = (issues) => {
+    allCardSection.innerHTML = ''
     issues.forEach(issue => {
         allCardSection.appendChild(createIssueCard(issue))
     });
+    allCardSection.classList.remove('hidden')
     manageSpinner(false)
 }
 
+// Display only open issues in the "Open" tab
 const displayOpenIssues = (issues) => {
+    openCardSection.innerHTML = ''
     const openIssues = issues.filter(issue => issue.status === 'open')
     openIssues.forEach(issue => {
         openCardSection.appendChild(createIssueCard(issue))
     });
 }
 
+// Display only closed issues in the "Closed" tab
 const displayClosedIssues = (issues) => {
+    closedCardSection.innerHTML = ''
     const closedIssues = issues.filter(issue => issue.status === 'closed')
     closedIssues.forEach(issue => {
         closedCardSection.appendChild(createIssueCard(issue))
     });
 }
 
-
+// Switch between tabs: All, Open, Closed
 const tabStatus = ['btn-soft']
 const switchTab = (currentTab) => {
+
     manageSpinner(true)
 
     const tabs = ['allBtn', 'openBtn', 'closedBtn']
@@ -147,31 +161,33 @@ const switchTab = (currentTab) => {
         )
     }
 
-
     allCardSection.classList.add('hidden')
     openCardSection.classList.add('hidden')
     closedCardSection.classList.add('hidden')
 
-
     setTimeout(() => {
+
         if (currentTab === 'allBtn') {
-            // location.reload()
             allCardSection.classList.remove('hidden')
             state.innerText = allCardSection.children.length
         }
+
         if (currentTab === 'openBtn') {
             openCardSection.classList.remove('hidden')
             state.innerText = openCardSection.children.length
         }
+
         if (currentTab === 'closedBtn') {
             closedCardSection.classList.remove('hidden')
             state.innerText = closedCardSection.children.length
         }
+
         manageSpinner(false)
+
     }, 300)
 }
 
-
+// Switch between tabs: All, Open, Closed
 document.getElementById('btn-search').addEventListener('click', async () => {
     switchTab('allBtn')
     document.getElementById('tab-allBtn').classList.add('btn-soft')
@@ -190,19 +206,16 @@ document.getElementById('btn-search').addEventListener('click', async () => {
     state.innerText = allCardSection.children.length
 })
 
-
-
-
+// Load issue details from API by issue ID
 const loadDetail = async (id) => {
     const url = `https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`
-    console.log(url)
+    // console.log(url)
     const res = await fetch(url)
     const detils = await res.json()
     displayDetils(detils.data)
 }
 
-
-
+// Get badge class for modal status
 const modalState = (parm) => {
     if (parm === 'open') {
         return 'badge-success'
@@ -212,8 +225,9 @@ const modalState = (parm) => {
     }
 }
 
+// Display issue details in modal
 const displayDetils = (detils) => {
-    console.log(detils)
+    // console.log(detils)
     const createdDate = new Date(detils.updatedAt);
     const formattedDate = `${createdDate.getMonth() + 1}/${createdDate.getDate()}/${createdDate.getFullYear()}`;
     const updatedAuthor = detils.author.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');

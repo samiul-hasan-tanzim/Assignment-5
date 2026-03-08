@@ -1,3 +1,72 @@
 * {
     font-family: "Geist", sans-serif;
 }
+
+@media screen and (max-width: 576px) {
+    main {
+        width: 100%;
+    }
+
+    .nav-header {
+        gap: 50px;
+        padding: 10px 20px;
+    }
+
+    .nav-header>div>h2 {
+        display: none;
+    }
+
+    .nav-header img {
+        width: 40px;
+    }
+
+    #input-search {
+        font-size: 12px;
+        padding: 4px 6px;
+    }
+
+    #input-search::placeholder {
+        font-size: 10px;
+    }
+
+    #btn-search {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+
+    .tab-btns,
+    .state-info-card,
+    #all-card-section,
+    #open-card-section,
+    #closed-card-section {
+        width: 95%;
+        margin: 40px auto 0 auto;
+        justify-content: center;
+    }
+
+    .tab-btns button {
+        font-size: 12px;
+        padding: 0px 30px;
+    }
+
+    .state-title-description h3,
+    p {
+        font-size: 0.5fr;
+    }
+
+    .state-indicator {
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    #all-card-section,
+    #open-card-section,
+    #closed-card-section {
+        margin-top: 2px;
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .login {
+        box-shadow: none;
+    }
+}
